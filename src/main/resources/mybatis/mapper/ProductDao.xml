@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.codebaristas.dao.IProductsDao">
+    <!-- 소프트 삭제된 데이터를 제외한 전 제품 조회 쿼리 -->
+    <select id="getAllProducts" resultType="com.example.codebaristas.dto.ProductsDto">
+        SELECT * FROM products
+        WHERE is_deleted = FALSE
+    </select>
+    <!-- 소프트 삭제된 데이터를 제외한 전 제품의 번호와 이름 조회 쿼리 -->
+    <select id="showProducts" resultType="com.example.codebaristas.dto.ProductsDto">
+        SELECT * FROM products
+        WHERE is_deleted = FALSE
+    </select>
+    <!--productId로 제품 가격 조회-->
+    <select id="getProductPriceById" parameterType="int" resultType="int">
+        SELECT productPrice FROM products
+                            WHERE productId = #{productId}
+    </select>
+    <!--products 테이블에 제품 추가-->
+    <insert id="completeProductAddition" parameterType="com.example.codebaristas.dto.ProductsDto">
+        INSERT INTO products (productName, productPrice)
+        VALUES (#{productName}, #{productPrice})
+    </insert>
+    <!--주문 화면에서 제품 제거
+        소프트 삭제를 위한 쿼리 -->
+    <update id="completeProductDeletion" parameterType="com.example.codebaristas.dto.ProductsDto">
+        UPDATE products
+        SET is_deleted = TRUE
+        WHERE productId = #{productId} OR productName = #{productName}
+    </update>
+
+</mapper>
